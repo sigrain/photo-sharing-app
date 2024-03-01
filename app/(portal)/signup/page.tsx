@@ -1,6 +1,6 @@
 "use client"
 import React from "react";
-import { signup } from '@/app/lib/firebase';
+import { signup, addUser } from '@/app/lib/firebase';
 import { useRouter } from 'next/navigation';
 import {Input, Button} from "@nextui-org/react";
 
@@ -14,7 +14,8 @@ export default function SignUp() {
     async function handleSignUp() {
         try {
             await signup(email ?? "", password ?? "");
-            router.push('/home');
+            await addUser(username ?? "", email ?? "");
+            router.push('./profile');
         } catch (error) {
             console.log(error);
         }

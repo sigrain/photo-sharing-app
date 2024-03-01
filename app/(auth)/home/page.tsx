@@ -1,11 +1,24 @@
-import React from "react";
+"use client"
+import React, { useState, useEffect } from 'react';
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Input, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, Avatar, Button} from "@nextui-org/react";
 import {NotificationIcon} from "./NotificationIcon";
 import { Badge } from "@nextui-org/react";
 import CreatePost from "./create-post";
 import Feed from "./feed";
+import { getIcon } from "@/app/lib/firebase";
 
 export default function Home() {
+    const [image, setImage] = useState<string>();
+
+    useEffect(() => {
+        const fetchImage = async() => {
+            const icon = await getIcon();
+            setImage(icon);
+        }
+
+        fetchImage();
+    })
+
     return (
         <div>
         <Navbar isBordered>
@@ -42,7 +55,7 @@ export default function Home() {
                 <p className="ml-5"></p>
                 <NavbarItem>
                     <div className="flex gap-4 items-center">
-                    <Avatar isBordered color="danger" src="https://i.pravatar.cc/150?u=a04258114e29026708c" />
+                    <Avatar isBordered color="danger" src={image} />
                     </div>
                 </NavbarItem>
             </NavbarContent>

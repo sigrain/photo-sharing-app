@@ -66,7 +66,27 @@ export const logout = async () => {
 export { firebaseApp, auth, firestore, user };
 
 const db = getFirestore();
+const d = firebase.firestore();
 const storage = getStorage();
+
+export const addUser = async (name: string, email: string) => {
+  const userRef = d.collection('users').doc(user?.uid);
+  userRef.set({
+    name: name,
+    email: email,
+  });
+}
+
+export const setIcon = async (file: File) => {
+  const storageRef = ref(storage, `users/${user?.uid}`);
+  await uploadBytes(storageRef, file);
+}
+
+export const getIcon = async () => {
+  const storageRef = ref(storage, `users/${user?.uid}`);
+  const url = getDownloadURL(storageRef);
+  return url;
+}
 
 export const uploadPhoto = async (name: string, file: File) => {
     const storageRef = ref(storage, `images/${name}`);
