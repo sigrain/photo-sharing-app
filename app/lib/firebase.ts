@@ -1,5 +1,5 @@
 import { initializeApp, getApps, FirebaseApp } from "firebase/app";
-import { getFirestore, Firestore, addDoc, collection } from "firebase/firestore";
+import { getFirestore, Firestore, addDoc, getDocs, collection } from "firebase/firestore";
 import {
     getAuth,
     Auth,
@@ -77,35 +77,57 @@ export const addUser = async (name: string, email: string) => {
   });
 }
 
-export const setIcon = async (file: File) => {
+export const setProfileIcon = async (file: File) => {
   const storageRef = ref(storage, `users/${user?.uid}`);
   await uploadBytes(storageRef, file);
 }
 
-export const getIcon = async () => {
+export const getProfileIcon = async () => {
   const storageRef = ref(storage, `users/${user?.uid}`);
   const url = getDownloadURL(storageRef);
   return url;
 }
 
-export const uploadPhoto = async (name: string, file: File) => {
-    const storageRef = ref(storage, `images/${name}`);
+export const getUserIcon = async (user?: string) => {
+  const storageRef = ref(storage, `users/${user}`);
+  const url = getDownloadURL(storageRef);
+  return url;
+}
 
+export const uploadPhoto = async (id: string, file: File, title: string) => {
+    const storageRef = ref(storage, `images/${id}`);
     await uploadBytes(storageRef, file);
 
-    await addDoc(collection(db, "Images"), {
-      fileName: name,
-      timestamp: new Date(),
+    const postRef = d.collection('posts').doc(id);
+    const url = await getImage(id);
+    const icon = await getUserIcon(user?.uid);
+    postRef.set({
+      url: url,
+      title: title,
+      user: user?.uid,
+      icon: icon,
     });
 }
 
-export const displayImages = async() => {
-  const listRef = ref(storage, 'images/');
+export const getPosts = async() => {
+  const postRef = collection(db, 'posts');
+  const querySnapshot = await getDocs(postRef);
+  const postArray: any = [];
+  querySnapshot.docs.map((doc) => {
+    postArray.push({
+      id: doc.id,
+      url: doc.data().url,
+      title: doc.data().title,
+      user: doc.data().user,
+      icon: doc.data().icon,
+    })
+  });
+  return postArray;
+}
 
-  const res = await listAll(listRef);
-  const urls = await Promise.all(
-    res.items.map((itemRef) => getDownloadURL(itemRef))
-  );
-  return urls;
+export const getImage = async(id: string) => {
+  const storageRef = ref(storage, `images/${id}`);
+  const url = getDownloadURL(storageRef);
+  return url;
 }
 

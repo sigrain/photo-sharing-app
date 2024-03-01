@@ -5,14 +5,14 @@ import {NotificationIcon} from "./NotificationIcon";
 import { Badge } from "@nextui-org/react";
 import CreatePost from "./create-post";
 import Feed from "./feed";
-import { getIcon } from "@/app/lib/firebase";
+import { getProfileIcon } from "@/app/lib/firebase";
 
 export default function Home() {
     const [image, setImage] = useState<string>();
 
     useEffect(() => {
         const fetchImage = async() => {
-            const icon = await getIcon();
+            const icon = await getProfileIcon();
             setImage(icon);
         }
 

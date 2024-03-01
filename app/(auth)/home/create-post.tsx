@@ -1,7 +1,7 @@
 "use client"
 import React from "react";
 import { useState, ChangeEvent } from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
 import { validateImage } from "image-validator";
 import { uploadPhoto } from "@/app/lib/firebase";
 
@@ -11,6 +11,7 @@ export default function CreatePost() {
   const [text, setText] = useState<string>("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [title, setTitle] = React.useState("");
 
   const validateFile = async (selectedFile: File): Promise<boolean> => {
     const limitFileSize = 3 * 1024 * 1024;
@@ -56,7 +57,7 @@ export default function CreatePost() {
 
     const timestamp = new Date().getTime();
     const uniqueFilename = `${timestamp}_${file.name}`;
-    uploadPhoto(uniqueFilename, file);
+    uploadPhoto(uniqueFilename, file, title);
   }
 
   return (
@@ -82,6 +83,8 @@ export default function CreatePost() {
                     <br />
                 </form>
                 <p style={{ color: "red" }}>{errorMsg && errorMsg}</p>
+                <p className="mb-3"></p>
+                <Input type="title" variant="underlined" label="Title" onValueChange={setTitle} />
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>

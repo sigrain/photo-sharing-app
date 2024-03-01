@@ -4,7 +4,7 @@ import { useState, ChangeEvent } from "react";
 import { Button } from "@nextui-org/react";
 import { validateImage } from "image-validator";
 import { useRouter } from 'next/navigation';
-import { setIcon } from "@/app/lib/firebase";
+import { setProfileIcon } from "@/app/lib/firebase";
 
 export default function SetProfile() {
     const router = useRouter();
@@ -56,7 +56,7 @@ export default function SetProfile() {
             return;
         }
         
-        setIcon(file);
+        setProfileIcon(file);
 
         try {
             router.push('/home');
