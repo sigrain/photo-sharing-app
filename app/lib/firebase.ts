@@ -101,12 +101,21 @@ export const uploadPhoto = async (id: string, file: File, title: string) => {
     const postRef = d.collection('posts').doc(id);
     const url = await getImage(id);
     const icon = await getUserIcon(user?.uid);
+    const username = await getUserName(user?.uid);
     postRef.set({
       url: url,
       title: title,
       user: user?.uid,
+      username: username,
       icon: icon,
     });
+}
+
+export const getUserName = async(uid?: string) => {
+  const userRef = d.collection('users').doc(uid);
+  const userDoc = await userRef.get();
+  const username = userDoc.data()?.name;
+  return username;
 }
 
 export const getPosts = async() => {
@@ -119,6 +128,7 @@ export const getPosts = async() => {
       url: doc.data().url,
       title: doc.data().title,
       user: doc.data().user,
+      username: doc.data().username,
       icon: doc.data().icon,
     })
   });
@@ -130,4 +140,3 @@ export const getImage = async(id: string) => {
   const url = getDownloadURL(storageRef);
   return url;
 }
-
