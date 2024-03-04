@@ -6,23 +6,29 @@ import { Badge } from "@nextui-org/react";
 import CreatePost from "./create-post";
 import Feed from "./feed";
 import Explore from "@/app/(auth)/explore/page";
-import { getProfileIcon, getPosts } from "@/app/lib/firebase";
+import { getProfileIcon, getPosts, logout, getUserEmail } from "@/app/lib/firebase";
+import { useRouter } from "next/navigation"
 
 export default function Home() {
+    const router = useRouter();
+
     const [image, setImage] = useState<string>();
     const [posts, setPosts] = useState<any[]>([]);
     const [showItems, setShowItems] = useState<any[]>([]);
     const [screen, setScreen] = useState('Home');
+    const [email, setEmail] = useState();
 
     useEffect(() => {
-        const fetchImage = async() => {
+        const fetchData = async() => {
             const icon = await getProfileIcon();
             setImage(icon);
+            const email = await getUserEmail();
+            setEmail(email);
             const data = await getPosts();
             setPosts(data);
         }
 
-        fetchImage();
+        fetchData();
     })
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,6 +45,11 @@ export default function Home() {
 
     const clickExplore = () => {
         setScreen('Explore');
+    }
+
+    const handleLogout = async() => {
+        await logout();
+        router.push('/signin');
     }
 
     return (
@@ -82,7 +93,24 @@ export default function Home() {
                 <p className="ml-5"></p>
                 <NavbarItem>
                     <div className="flex gap-4 items-center">
-                    <Avatar isBordered color="danger" src={image} />
+                    <Dropdown placement="top-end">
+                        <DropdownTrigger>
+                            <Avatar isBordered color="danger" src={image} />
+                        </DropdownTrigger>
+                        <DropdownMenu aria-label="Profile Actions" variant="flat">
+                            <DropdownItem key="profile" className="h-14 gap-2">
+                                <p className="font-semibold">Signed in as</p>
+                                <p className="font-semibold">{email}</p>
+                            </DropdownItem>
+                            <DropdownItem key="settings">Settings</DropdownItem>
+                            <DropdownItem key="help_and_feedback">
+                                Help & Feedback
+                            </DropdownItem>
+                            <DropdownItem key="logout" color="danger" onClick={handleLogout}>
+                                Log Out
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
                     </div>
                 </NavbarItem>
             </NavbarContent>

@@ -118,6 +118,13 @@ export const getUserName = async(uid?: string) => {
   return username;
 }
 
+export const getUserEmail = async() => {
+  const userRef = d.collection('users').doc(user?.uid);
+  const userDoc = await userRef.get();
+  const username = userDoc.data()?.email;
+  return username;
+}
+
 export const getPosts = async() => {
   const postRef = collection(db, 'posts');
   const querySnapshot = await getDocs(postRef);
