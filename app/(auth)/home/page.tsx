@@ -5,12 +5,14 @@ import {NotificationIcon} from "./NotificationIcon";
 import { Badge } from "@nextui-org/react";
 import CreatePost from "./create-post";
 import Feed from "./feed";
+import Explore from "@/app/(auth)/explore/page";
 import { getProfileIcon, getPosts } from "@/app/lib/firebase";
 
 export default function Home() {
     const [image, setImage] = useState<string>();
     const [posts, setPosts] = useState<any[]>([]);
     const [showItems, setShowItems] = useState<any[]>([]);
+    const [screen, setScreen] = useState('Home');
 
     useEffect(() => {
         const fetchImage = async() => {
@@ -28,6 +30,15 @@ export default function Home() {
             return item.title.toLowerCase().match(e.target.value.toLowerCase());
         });
         setShowItems(result);
+        setScreen('Search');
+    }
+
+    const clickHome = () => {
+        setScreen('Home');
+    }
+
+    const clickExplore = () => {
+        setScreen('Explore');
     }
 
     return (
@@ -35,15 +46,17 @@ export default function Home() {
         <Navbar isBordered>
             <NavbarContent className="hidden sm:flex" justify="start">
                 <NavbarItem>
-                    <Link color="foreground" href="#" size="md">
-                        Home
-                    </Link>
+                    <Button onPress={clickHome} variant="ghost" className="border-none">
+                        {screen !== 'Home' && <h1 className="font-semibold">Home</h1>}
+                        {screen === 'Home' && <h1 className="font-semibold underline underline-offset-8">Home</h1>}
+                    </Button>
                 </NavbarItem>
-                <p className="ml-5"></p>
+                <p className="ml-2"></p>
                 <NavbarItem>
-                    <Link color="foreground" href="#" aria-current="page" size="md">
-                        Explore
-                    </Link>
+                    <Button onPress={clickExplore} variant="ghost" className="border-none">
+                        {screen !== 'Explore' && <h1 className="font-semibold">Explore</h1>}
+                        {screen === 'Explore' && <h1 className="font-semibold underline underline-offset-8">Explore</h1>}
+                    </Button>
                 </NavbarItem>
                 <p className="ml-3"></p>
                 <NavbarItem>
@@ -74,7 +87,11 @@ export default function Home() {
                 </NavbarItem>
             </NavbarContent>
         </Navbar>
-        <Feed posts={showItems}/>
+        <div>
+            {screen === 'Home' && <Feed posts={posts} />}
+            {screen === 'Search' && <Feed posts={showItems}/>}
+            {screen === 'Explore' && <Explore />}
+        </div>
         </div>
     )
 }
