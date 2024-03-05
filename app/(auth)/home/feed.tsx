@@ -13,7 +13,7 @@ export default function Feed({ posts }: { posts: any }) {
         {
             posts.map((item: any) => {
                 return (
-                    <React.Fragment key={item.id}>
+                    <div>
                     <p className="mt-3"></p>
                     <Card className="border-none shadow-none" radius="none">
                         <Image src={item.url} width={300} className="object-cover rounded-xl basis-1/3" />
@@ -24,7 +24,7 @@ export default function Feed({ posts }: { posts: any }) {
                         </li>
                     </Card>
                     <p className="mb-7"></p>
-                    </React.Fragment>
+                    </div>
                 )
             })
         }
