@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a photo-sharing-app that I developed with Next.js and Firebase.
 
 ## Overview
 
@@ -8,7 +8,6 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 <img width="1470" alt="Screenshot 2024-03-06 at 9 57 06" src="https://github.com/sigrain/photo-sharing-app/assets/65530240/e8bc60fd-5f46-4e1d-a351-149572032f9b">
 
-This is a photo-sharing-app that I developed.
 Similar to Pinterest, once users post photo, feed will update and can preview as a garallery.
 Multiple users are able to post photo, since it has e-mail authentication system.
 I use Next.js and Firebase to build this social-media.
