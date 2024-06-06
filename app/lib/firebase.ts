@@ -1,4 +1,4 @@
-import { initializeApp, getApps, FirebaseApp } from "firebase/app";
+import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
 import { getFirestore, Firestore, addDoc, getDocs, collection } from "firebase/firestore";
 import {
     getAuth,
@@ -11,7 +11,7 @@ import {
 } from "firebase/auth";
 import firebase from "firebase/compat/app";
 import 'firebase/compat/firestore';
-import { getStorage, ref, uploadBytes, getDownloadURL, StorageReference, listAll } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_APIKEY,
@@ -22,20 +22,18 @@ const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_APPID
 };
 
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 let firebaseApp: FirebaseApp;
 let auth: Auth;
 let firestore: Firestore;
 let user: User | null = null;
 
-if (typeof window !== "undefined" && !getApps().length) {
-    firebaseApp = initializeApp(firebaseConfig);
-    firebase.initializeApp(firebaseConfig);
-    auth = getAuth();
-    firestore = getFirestore();
-    onAuthStateChanged(auth, (userData) => {
-      user = userData;
-    })
-}
+firebaseApp = initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
+auth = getAuth();
+onAuthStateChanged(auth, (userData) => {
+  user = userData;
+})
 
 export const signup = async (email: string, password: string) => {
     try {
